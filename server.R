@@ -1,5 +1,4 @@
 source("ui.R")
-library("DT")
 
 my.server <- function(input, output) {
   
@@ -7,14 +6,11 @@ my.server <- function(input, output) {
     names(breaches.data) <- breaches$Title
     breach.name <- names(breaches.data[grepl(input$category, breaches.data)])
     expo.breach <- breaches %>%
-      filter(grepl(breach.name, Title))
+      filter(Title %in% breach.name)
   })
   
-  output$test <- renderText(
+  output$exposed <- renderDataTable(
     return(expo.name())
-    # cbind(expo.name()),
-    # options = list(pageLength = 3, scrollX = TRUE), 
-    # rownames = FALSE
   )
 }
 

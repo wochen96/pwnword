@@ -8,17 +8,14 @@ my.ui <- fluidPage(
     sidebarPanel(
       selectizeInput('category',"Select a category:",
                      choices = c("Search" = "", category),
-                     selected = category[1:3],
-                     multiple = TRUE,
+                     selected = category[3],
                      options = list(
-                       placeholder = 'Type in a category to search.',
-                       maxOptions = 5)
+                       placeholder = 'Type in a category to search.')
       )
     ),
     mainPanel(
       tabsetPanel(type = "tabs",
-                  tabPanel("Exposed", dataTableOutput('exposed')),
-                  tabPanel("text", textOutput('test'))
+                  tabPanel("Exposed", dataTableOutput('exposed'))
       )
     )
   )

@@ -13,12 +13,15 @@ PwnSearch <- function(service) {
 
 breaches <- PwnSearch("breaches")
 breaches.data <- breaches$DataClasses
-test <- list.filter(breaches.data, Value = category[1])
 
 
-breaches <- PwnSearch("breaches")
-
-#   select(Title, Name, Domain, BreachDate, AddedDate, ModifiedDate, PwnCount, Description,
-#          IsVerified, IsFabricated, IsSensitive, IsActive, IsRetired, IsSpamList)
+breaches <- PwnSearch("breaches") %>%
+  select(Title, BreachDate, AddedDate, ModifiedDate, PwnCount, Description)
 
 category <- PwnSearch("dataclasses")
+
+names(breaches.data) <- breaches$Title 
+breach.name <- names(breaches.data[grepl(category[1], breaches.data)])
+expo.breach <- breaches %>%
+  filter(Title %in% breach.name)
+expo.breach
