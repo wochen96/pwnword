@@ -22,14 +22,6 @@ over.time <- ggplot(breaches, aes(year)) + geom_bar(fill = "#FF6666") +
        title = "Amount of Breaches Over the Years") +
   theme(plot.title = element_text(face = "bold"))
 
-"Has internet security increased over time?"
-
-"The website tracks breached dates and by observing the trend we 
-can see if internet security over the years have improved or changed 
-in any way. We will look at the number of breaches that have happened 
-based on the date and form a scatterplot with the data to find a trend 
-on if it has decreased, increased or remain the same."
-
 ggplot(breaches, aes(x = year, y = PwnCount)) + geom_point()
 
 #   select(Title, Name, Domain, BreachDate, AddedDate, ModifiedDate, PwnCount, Description,
