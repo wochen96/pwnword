@@ -4,6 +4,13 @@ library('dplyr')
 library('ggplot2')
 library('shiny')
 
+base.uri <- "https://haveibeenpwned.com/api/v2"
+breach.uri <- "/breaches"
+
+response <- GET(paste0(base.uri, breach.uri))
+breaches <- fromJSON(content(response, "text"))
+breaches <- mutate(breaches, year = substring(breaches$BreachDate, 1, 4))
+
 ui <- navbarPage("PwnWord",
                  tabPanel("Overview",
                           h1("Overview"),
@@ -54,11 +61,66 @@ ui <- navbarPage("PwnWord",
                           
                           ),
                  tabPanel("Over the Years"),
-                 tabPanel("Types"),
+                 tabPanel("Types",
+                          sidebarLayout(
+                            sidebarPanel(
+                              selectInput("select.type", "Select a type:",
+                                          choices = c("Verified", "Fabricated", 
+                                                      "Sensitive", "Active", 
+                                                      "Retired", "Spamlist")),
+                              
+                              br(),
+                              
+                              sliderInput("year", "Select Year",
+                                          min = 2007, max = 2018,
+                                          value = c(2007, 2018))
+                            ),
+                            mainPanel(
+                              plotOutput("type")
+                            )
+                          )
+                          ),
                  tabPanel("Categories")
 )
 
 server <- function(input, output) {
+  
+  output$type <- renderPlot({
+    
+    type <- breaches$IsVerified
+    
+    # Select type of breach
+    if(input$select.type == "Verified") {
+      type <- breaches$IsVerified
+    } else if (input$select.type == "Fabricated") {
+      type <- breaches$IsFabricated
+    } else if (input$select.type == "Sensitive") {
+      type <- breaches$IsSensitive
+    } else if (input$select.type == "Active") {
+      type <- breaches$IsActive
+    } else if (input$select.type == "Retired") {
+      type <- breaches$IsRetired
+    } else if (input$select.type == "Spamlist") {
+      type <- breaches$IsSpamList
+    }
+    
+    # Filter data based on years
+    type.data <- breaches
+    type.data <- filter(type.data, year >= input$year[1] & 
+                        year <= input$year[2])
+    
+    # Plot point table with given selections
+    g <- ggplot(data = breaches) +
+      geom_point(mapping = aes(x = year, y = PwnCount, color = type)) +
+      scale_x_discrete(limits = input$year[1]:input$year[2]) +
+      scale_y_continuous(limits = c(0, max(type.data$PwnCount)), 
+                         labels = scales::comma) +
+      xlab("Year") +
+      guides(color = guide_legend(title = input$select.type))
+    
+    return(g)
+  
+  })
   
 }
 
