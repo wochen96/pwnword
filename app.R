@@ -3,6 +3,7 @@ library('jsonlite')
 library('dplyr')
 library('ggplot2')
 library('shiny')
+library('plotly')
 
 base.uri <- "https://haveibeenpwned.com/api/v2"
 breach.uri <- "/breaches"
@@ -27,6 +28,7 @@ ui <- navbarPage("PwnWord",
                             breaches and how they compare with each other, and 
                             which breached websites have important information 
                             on them."),
+                          
                           h3("The Data"),
                           p("We are using data that is open to the public, 
                             which can be found ", 
@@ -40,6 +42,7 @@ ui <- navbarPage("PwnWord",
                             em("pwn"), "to indicate the amount of accounts that
                             have been hacked."
                             ),
+                          
                           h3("Analysis Questions"),
                           p("These were some of the questions that we were
                             curious about from the data:"),
@@ -52,6 +55,7 @@ ui <- navbarPage("PwnWord",
                                     information (i.e. Credit card info, 
                                     government issued ID, etc)?")
                           ),
+                          
                           h3("About Us"),
                           p("This project was created by Wo Bin Chen, William 
                             Tan, and Jackie Trenh. We are a group of students
@@ -61,6 +65,7 @@ ui <- navbarPage("PwnWord",
                           
                           ),
                  tabPanel("Over the Years"),
+                 
                  tabPanel("Types",
                           sidebarLayout(
                             sidebarPanel(
@@ -76,21 +81,22 @@ ui <- navbarPage("PwnWord",
                                           value = c(2007, 2018))
                             ),
                             mainPanel(
-                              plotOutput("type")
+                              plotlyOutput("type")
                             )
                           )
-                          ),
+                        ),
+                 
                  tabPanel("Categories")
 )
 
 server <- function(input, output) {
   
-  output$type <- renderPlot({
+  output$type <- renderPlotly({
     
     type <- breaches$IsVerified
     
     # Select type of breach
-    if(input$select.type == "Verified") {
+    if (input$select.type == "Verified") {
       type <- breaches$IsVerified
     } else if (input$select.type == "Fabricated") {
       type <- breaches$IsFabricated
@@ -109,16 +115,19 @@ server <- function(input, output) {
     type.data <- filter(type.data, year >= input$year[1] & 
                         year <= input$year[2])
     
-    # Plot point table with given selections
-    g <- ggplot(data = breaches) +
-      geom_point(mapping = aes(x = year, y = PwnCount, color = type)) +
-      scale_x_discrete(limits = input$year[1]:input$year[2]) +
-      scale_y_continuous(limits = c(0, max(type.data$PwnCount)), 
-                         labels = scales::comma) +
-      xlab("Year") +
-      guides(color = guide_legend(title = input$select.type))
+    # Plot interactive scatterplot with given selections
+    p <- plot_ly(breaches, x = ~year, y= ~PwnCount, type = 'scatter', 
+                 color = type, colors = c("red", "green"),
+                 hoverinfo = 'text',
+                 text = ~paste('Website: ', Title,
+                               '<br> Breach Date: ', BreachDate,
+                               '<br> PwnCount: ', PwnCount)) %>%
+      layout(
+        title = "Breaches by Type",
+        xaxis = list(title = "Year", range = c(input$year[1], input$year[2]))
+        )
     
-    return(g)
+    return(p)
   
   })
   
