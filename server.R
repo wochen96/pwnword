@@ -1,20 +1,15 @@
 source("ui.R")
-library("DT")
 
 my.server <- function(input, output) {
   
   expo.name <- reactive({
-    names(breaches.data) <- breaches$Title
+    names(breaches.data) <- breaches.select$`Website Name`
     breach.name <- names(breaches.data[grepl(input$category, breaches.data)])
-    expo.breach <- breaches %>%
-      filter(grepl(breach.name, Title))
+    expo.breach <- breaches.select %>%
+      filter(`Website Name` %in% breach.name)
   })
   
-  output$test <- renderText(
+  output$exposed <- renderDataTable(
     return(expo.name())
-    # cbind(expo.name()),
-    # options = list(pageLength = 3, scrollX = TRUE), 
-    # rownames = FALSE
   )
 }
-
