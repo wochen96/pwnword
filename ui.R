@@ -3,6 +3,7 @@ library("DT")
 source("search.R")
 
 my.ui <- fluidPage(
+  includeCSS("pwnword.css"),
   titlePanel("PwnWord"),
   mainPanel(
     tabsetPanel(type = "tabs",
