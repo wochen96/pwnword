@@ -16,13 +16,8 @@ breaches <- PwnSearch("breaches")
 breaches.data <- breaches$DataClasses
 
 breaches <- mutate(breaches, year = substring(breaches$BreachDate, 1, 4))
-
-over.time <- ggplot(breaches, aes(year)) + geom_bar(fill = "#FF6666") +
-  labs(x = "Year", y = "Number of Breaches", 
-       title = "Amount of Breaches Over the Years") +
-  theme(plot.title = element_text(face = "bold"))
-
-ggplot(breaches, aes(x = year, y = PwnCount)) + geom_point()
+min.year <- min(breaches$year)
+max.year <- max(breaches$year)
 
 #   select(Title, Name, Domain, BreachDate, AddedDate, ModifiedDate, PwnCount, Description,
 #          IsVerified, IsFabricated, IsSensitive, IsActive, IsRetired, IsSpamList)
