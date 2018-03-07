@@ -6,7 +6,7 @@ my.ui <- fluidPage(
   titlePanel("PwnWord"),
   mainPanel(
     tabsetPanel(type = "tabs",
-                tabPanel("Exposed", 
+                tabPanel("Exposed",
                          selectizeInput('category',"Select a category:",
                                         choices = c("Search" = "", category),
                                         selected = category[3],
