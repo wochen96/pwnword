@@ -15,8 +15,13 @@ PwnSearch <- function(service) {
 breaches <- PwnSearch("breaches")
 breaches.data <- breaches$DataClasses
 
-
 breaches <- PwnSearch("breaches") %>%
   select(Title, ModifiedDate, PwnCount, Description)
+
+htmlClear <- function(htmltext) {
+  return(gsub("<.*?>", "", htmltext))
+}
+
+breaches$Description <- htmlClear(breaches$Description)
 
 category <- PwnSearch("dataclasses")
