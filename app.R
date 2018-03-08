@@ -68,8 +68,57 @@ ui <- navbarPage("PwnWord",
                           
                           ),
                  
+                 # User interactive panel
+                 tabPanel("Have U Been Pwned?",
+                          
+                          p("This section lets you look at what accounts or
+                            emails have been compromised. Inputting an
+                            account or email searches the database of ", 
+                            a("HIBP", href="https://haveibeenpwned.com/"), "
+                            to see if the account contains it."),
+                          
+                   sidebarLayout(
+                     sidebarPanel(
+                       textInput('user.email', 'Check if you have an account
+                                 that has been compromised in a data breach', 
+                                 placeholder = "Enter email/username...")
+                     ),
+                     mainPanel(
+                       dataTableOutput("user.search")
+                     )
+                   )
+                  ),
+                 
                  # Time panel
-                 tabPanel("Time"),
+                 tabPanel("Internet Security Over Time",
+                          
+                          p("This chart displays the amount of breaches that
+                            have happened throughout the years. The data begins
+                            from 2007 and goes up to 2018."),
+                          
+                          p("Based on the chart, it is clear to see that there
+                            has been an increase in the number of breaches.
+                            People would expect that as time goes on,
+                            cyber-security would improve. Although it may be
+                            possible, this chart shows that it is possible that
+                            hackers have an easier time bypassing
+                            cyber-security."),
+                          
+                          sidebarLayout(
+                            sidebarPanel(
+                              sliderInput('year.choice', label='Year Range', 
+                                          min=as.numeric(min.year),
+                                          max=as.numeric(max.year), 
+                                          value=c(as.numeric(min.year), 
+                                                  as.numeric(max.year))
+                                          )
+                            ),
+                            mainPanel(
+                              plotOutput("security"),
+                              textOutput('plot.desc')
+                            )
+                          )
+                 ),
                  
                  # Types panel
                  tabPanel("Types", 
@@ -154,6 +203,53 @@ ui <- navbarPage("PwnWord",
 
 server <- function(input, output) {
   
+  # searches for breach data on user given username/email
+  default <- reactive({
+    data <- select(breaches.d[0, ], Name, Domain, BreachDate, Description)
+    base.uri = "https://haveibeenpwned.com/api/v2/"
+    if (input$user.email == "") {
+      return(data)
+    }
+    response <- GET(paste0(base.uri, "breachedaccount/", input$user.email))
+    if (response$status_code != 200) {
+      return(data)
+    }
+    result <- content(response, "text")
+    jres <- fromJSON(result)
+    data <- select(jres, Name, Domain, BreachDate, Description)
+    return(data)
+  })
+  
+  # filters for selected years
+  filtered <- reactive({
+    data <- filter(breaches.d, year >= input$year.choice[1] & 
+                     year <= input$year.choice[2])
+    over.time <- ggplot(data, aes(year)) + geom_bar(fill = "#FF6666") +
+      labs(x = "Year", y = "Number of Breaches", 
+           title = "Amount of Breaches Over the Years") +
+      theme(plot.title = element_text(face = "bold")) 
+    
+    return(over.time)
+  })
+  
+  # generates a data table of information from the given username/email
+  output$user.search <- renderDataTable({
+    return(default())
+  },
+  escape = FALSE)
+  
+  # generates a visualization on the breaches over the years
+  output$security <- renderPlot({
+    return(filtered())
+  })
+  
+  # generates a text description of the plot visualization
+  output$plot.desc <- renderText({
+    paste0("The visualization above displays the breaches of data between ",
+           input$year.choice[1], " and ", input$year.choice[2], ".")
+  })
+  
+  # Create plot for 'types'
   output$type <- renderPlotly({
     
     type <- breaches$IsVerified
@@ -188,7 +284,7 @@ server <- function(input, output) {
       layout(
         title = "Breaches by Type",
         xaxis = list(title = "Year", range = c(input$year[1], input$year[2]))
-        )
+      )
     
     return(p)
   
