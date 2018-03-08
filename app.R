@@ -33,7 +33,11 @@ ui <- shinyUI(
                                 breaches throughout the years, the types of 
                                 breaches and how they compare with each other, and 
                                 which breached websites have important information 
-                                on them.")
+                                on them. In our world today, there is a lot of
+                                information that can be accessed by hackers,
+                                and it is important for users and
+                                cyber-security experts to know what information
+                                is being compromised.")
                           ),
                           div(class="data",
                             h3("The Data"),
@@ -42,7 +46,7 @@ ui <- shinyUI(
                               a("here.", href="https://haveibeenpwned.com/"), 
                               "The data has been recorded since 2007 and all 
                               private information, such as passwords, are 
-                              disclosed.", tags$em("Troy Hunt"), 
+                              kept confidential.", tags$em("Troy Hunt"), 
                               " has created the website as a 
                               resource for people to find out whether they have 
                               been potentially hacked. He coins the word ",
@@ -82,7 +86,8 @@ ui <- shinyUI(
                             emails have been compromised. Inputting an
                             account or email searches the database of ", 
                             a("HIBP", href="https://haveibeenpwned.com/"), "
-                            to see if the account contains it."),
+                            to see if the account is contained in the
+                            database."),
                           
                    sidebarLayout(
                      sidebarPanel(
@@ -103,13 +108,21 @@ ui <- shinyUI(
                             have happened throughout the years. The data begins
                             from 2007 and goes up to 2018."),
                           
-                          p("Based on the chart, it is clear to see that there
-                            has been an increase in the number of breaches.
-                            People would expect that as time goes on,
-                            cyber-security would improve. Although it may be
-                            possible, this chart shows that it is possible that
-                            hackers have an easier time bypassing
-                            cyber-security."),
+                          p("Based on the chart, there appears to be an
+                            increase in data breaches over time. This can be
+                            attributable to a variety of factors such as the
+                            constant growth of the internet resulting in more
+                            information being out there available to getting
+                            compromised in a data breach and security becoming
+                            outdated making them more susceptible to getting
+                            breached. The value for the year 2018 is low
+                            compared to the previous years due to it only being
+                            three months into the year (as of when this
+                            was published). People would expect that as time
+                            goes on, cyber-security would improve. Although it
+                            may be possible, this chart shows that it is
+                            possible that hackers have an easier time
+                            bypassing cyber-security."),
                           
                           sidebarLayout(
                             sidebarPanel(
