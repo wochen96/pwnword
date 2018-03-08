@@ -1,0 +1,61 @@
+.navbar {
+  background-color: #9CC3A7;
+  text-transform: uppercase;
+  padding: 1.5rem 1rem;
+}
+
+body {
+  font-family: "Nunito Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 14pt;
+  background-color: #FFFFFF;
+}
+
+h1, h2, h3, h4 {
+  text-align: center;
+}
+
+.navbar-default, .navbar-nav>li>a{
+  border-color: #ffffff;
+  border-style: solid;
+  border-width: 1px;
+}
+
+nav > li > a {
+  display: block;
+}
+
+ul {
+  list-style: none;
+}
+
+span.navbar-brand {
+  height: 52px;
+  font-style: italic;
+}
+
+.navbar .navbar-default .navbar-static-top {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+
+.data, .analysis{
+  width: 50%;
+}
+
+.data {
+  float: right;
+}
+
+.analysis, .about{
+  float: left;
+  clear: left;
+}
+
+p, h3, h2, h1, h4, li, label{
+  color: #28763e;
+}
+
+table {
+  border-style: solid;
+  border-width: 1px;
+}
