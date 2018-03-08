@@ -1,6 +1,7 @@
 library("httr")
 library("jsonlite")
 library("dplyr")
+library("tidyverse")
 
 # Function for finding the json data by taking the query parameter to find the results
 PwnSearch <- function(service) {
@@ -11,14 +12,21 @@ PwnSearch <- function(service) {
   return(jres)
 }
 
-breaches <- PwnSearch("breaches")
-breaches.data <- breaches$DataClasses
-test <- list.filter(breaches.data, Value = category[1])
+breach <- PwnSearch("breaches")
+breaches.data <- breach$DataClasses
 
+breaches.select <- PwnSearch("breaches") %>%
+  select(Title, BreachDate, PwnCount, Description)
 
-breaches <- PwnSearch("breaches")
+colnames(breaches.select) <- c("Website Name", "Date of Breach", "Accounts Exposed", "Description")
 
-#   select(Title, Name, Domain, BreachDate, AddedDate, ModifiedDate, PwnCount, Description,
-#          IsVerified, IsFabricated, IsSensitive, IsActive, IsRetired, IsSpamList)
+breaches.select$`Date of Breach` <- format(
+  as.Date(breaches.select$`Date of Breach`), format = "%b %d %Y")
+
+htmlClear <- function(htmltext) {
+  return(gsub("<.*?>", "", htmltext))
+}
+
+breaches.select$Description <- htmlClear(breaches.select$Description)
 
 category <- PwnSearch("dataclasses")

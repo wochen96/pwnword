@@ -4,6 +4,9 @@ library('dplyr')
 library('ggplot2')
 library('shiny')
 library('plotly')
+library("DT")
+library('tidyverse')
+source("search.R")
 
 base.uri <- "https://haveibeenpwned.com/api/v2"
 breach.uri <- "/breaches"
@@ -138,7 +141,15 @@ ui <- navbarPage("PwnWord",
                         ),
                  
                  # Category panel
-                 tabPanel("Categories")
+                 tabPanel("Categories", 
+                          selectizeInput('category',"Select a category:",
+                                         choices = c("Search" = "", category),
+                                         selected = category[3],
+                                         options = list(
+                                           placeholder = 'Type in a category
+                                           to search.')
+                                         ),
+                          dataTableOutput('exposed'))
 )
 
 server <- function(input, output) {
@@ -182,6 +193,17 @@ server <- function(input, output) {
     return(p)
   
   })
+  
+  expo.name <- reactive({
+    names(breaches.data) <- breaches.select$`Website Name`
+    breach.name <- names(breaches.data[grepl(input$category, breaches.data)])
+    expo.breach <- breaches.select %>%
+      filter(`Website Name` %in% breach.name)
+  })
+  
+  output$exposed <- renderDataTable(
+    return(expo.name())
+  )
   
 }
 
