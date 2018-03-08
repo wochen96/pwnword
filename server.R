@@ -28,7 +28,8 @@ my.server <- function(input, output) {
     over.time <- ggplot(data, aes(year)) + geom_bar(fill = "#FF6666") +
       labs(x = "Year", y = "Number of Breaches", 
            title = "Amount of Breaches Over the Years") +
-      theme(plot.title = element_text(face = "bold")) 
+      theme(plot.title = element_text(face = "bold", hjust = 0.5),
+            text = element_text(size=15)) 
     
     return(over.time)
   })
@@ -50,13 +51,7 @@ my.server <- function(input, output) {
   output$security <- renderPlot({
     return(filtered())
   })
-  
-  # generates a text description of the plot visualization
-  output$plot.desc <- renderText({
-    paste0("The visualization above displays the breaches of data between ",
-          input$year.choice[1], " and ", input$year.choice[2], ".")
-  })
-  
+
   output$test <- renderText(
     return(expo.name())
     # cbind(expo.name()),
