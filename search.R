@@ -12,8 +12,10 @@ PwnSearch <- function(service) {
   return(jres)
 }
 
+# extract data from breaches and seperate categories to another 
 breaches <- PwnSearch("breaches")
 breaches.data <- breaches$DataClasses
+
 
 breaches.select <- PwnSearch("breaches") %>%
   select(Title, BreachDate, PwnCount, Description)
@@ -27,6 +29,11 @@ htmlClear <- function(htmltext) {
   return(gsub("<.*?>", "", htmltext))
 }
 
+quoteClear <- function(quotetext) {
+  return(gsub("&quot;", "\"", quotetext))
+}
+
 breaches.select$Description <- htmlClear(breaches.select$Description)
+breaches.select$Description <- quoteClear(breaches.select$Description)
 
 category <- PwnSearch("dataclasses")
