@@ -35,12 +35,12 @@ ui <- navbarPage("PwnWord",
                             a("here.", href="https://haveibeenpwned.com/"), 
                             "The data has been recorded since 2007 and all 
                             private information, such as passwords, are 
-                            disclosed.", em("Troy Hunt"), 
+                            disclosed.", tags$em("Troy Hunt"), 
                             " has created the website as a 
                             resource for people to find out whether they have 
                             been potentially hacked. He coins the word ",
-                            em("pwn"), "to indicate the amount of accounts that
-                            have been hacked."
+                            tags$em("pwn"), "to indicate the amount of accounts
+                            that have been hacked."
                             ),
                           
                           h3("Analysis Questions"),
@@ -49,7 +49,7 @@ ui <- navbarPage("PwnWord",
                           tags$ul(
                             tags$li("Has internet security increased over 
                                     time?"),
-                            tags$li("How do verified breaches and unverified 
+                            tags$li("How do different types of 
                                     breaches compare with each other?"),
                             tags$li("Which sites have exposed important 
                                     information (i.e. Credit card info, 
@@ -64,15 +64,63 @@ ui <- navbarPage("PwnWord",
                             cyber-security in our world today.")
                           
                           ),
-                 tabPanel("Over the Years"),
+                 tabPanel("Time"),
                  
-                 tabPanel("Types",
+                 tabPanel("Types", 
+                          
+                          p("This chart displays the breaches by the 
+                            type it is selected. The data can be 
+                            filtered by a given year range. PwnCount refers to
+                            the amount of accounts in the breach have been
+                            potentially compromised."),
+                          
+                          p(tags$b("Verified"), " refers to whether a breach is
+                            confirmed. Some breaches may be unverified, but can
+                            still contain real information. As shown in the
+                            chart, most of the breaches have been verified. The
+                            unverified breaches can be legitimate, since the
+                            PwnCount of the verified and unverified seem to
+                            be similar."),
+                          
+                          p(tags$b("Fabricated"), " refers to if the data from
+                            the breach is fake. Although, it can be fabricated,
+                            some information can be real, such as email
+                            addresses. As shown in the chart, most of the
+                            breaches are not fabricated. So, people should
+                            be wary the fact that information put onto the
+                            Internet can be accessed by others."),
+                          
+                          p(tags$b("Sensitive"), " refers to if the breached
+                            website has information that can impact a user's
+                            life if they are found to be a member of the site.
+                            As shown in the chart, most of the sensitive
+                            breaches are adult websites. If others were to
+                            find out if someone has an email linked to the
+                            websites, they may be judged by them."),
+                          
+                          p(tags$b("Active"), " refers to if the breach
+                            is currently listed in ", a("HIBP.", 
+                            href="https://haveibeenpwned.com/"), "All of the
+                            breaches should be set to active."
+                            ),
+                          
+                          p(tags$b("Retired"), " refers to information of
+                            a breach that has been permanently removed from
+                            the website. The only retired breach is from 
+                            Vtech."),
+                          
+                          p(tags$b("Spam List"), " refers to a breach where
+                            information is taken just to target people with 
+                            spam. The information taken can be names,
+                            addresses, and phone numbers. Majority of the
+                            breaches are not spam lists."),
+                          
                           sidebarLayout(
                             sidebarPanel(
                               selectInput("select.type", "Select a type:",
                                           choices = c("Verified", "Fabricated", 
                                                       "Sensitive", "Active", 
-                                                      "Retired", "Spamlist")),
+                                                      "Retired", "Spam List")),
                               
                               br(),
                               
@@ -119,9 +167,9 @@ server <- function(input, output) {
     p <- plot_ly(breaches, x = ~year, y= ~PwnCount, type = 'scatter', 
                  color = type, colors = c("red", "green"),
                  hoverinfo = 'text',
-                 text = ~paste('Website: ', Title,
-                               '<br> Breach Date: ', BreachDate,
-                               '<br> PwnCount: ', PwnCount)) %>%
+                 text = ~paste(tags$b('Website: '), Title,
+                               tags$b('<br> Breach Date: '), BreachDate,
+                               tags$b('<br> PwnCount: '), PwnCount)) %>%
       layout(
         title = "Breaches by Type",
         xaxis = list(title = "Year", range = c(input$year[1], input$year[2]))
