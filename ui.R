@@ -15,7 +15,7 @@ my.ui <- fluidPage(
                        maxOptions = 5)),
       
       # a textInput that lets the user enter in their username/email
-      # to search for whether they have an account that has been 
+      # to search for if they have an account that has been 
       # compromised in a data breach
       textInput('user.email', 'Check if you have an account that
                 has been compromised in a data breach', 
