@@ -5,7 +5,6 @@ library('ggplot2')
 library('shiny')
 library('plotly')
 library("DT")
-library('tidyverse')
 source("search.R")
 
 base.uri <- "https://haveibeenpwned.com/api/v2"
@@ -199,11 +198,17 @@ ui <- shinyUI(
                  
                  # Category panel
                  tabPanel("Categories",
-                          p("This table displays the breaches within each category. The data is filtered by 
-                            selecting a category which then will return the domain information associated to it."),
-                          p("While most of the categories will only return around 10 or so domains, the two categories 
-                            (\"Password\" and \"Usernames\")  have the highest return of domains. The largest focus of 
-                            data breaches is obtaining the user and password of people's account."),
+                          p("This table displays the breaches within each
+                            category. The data is filtered by selecting a
+                            category which then will return the domain
+                            information associated to it."),
+                          p("While most of the categories will only return
+                            around 10 or so domains, the two categories 
+                            (\"Password\" and \"Usernames\")  have the highest
+                            return of domains. The largest focus of data
+                            breaches is obtaining the user and password of
+                            people's account."),
+                          
                           selectizeInput('category',"Select a category:",
                                          choices = c("Search" = "", category),
                                          selected = category[3],
@@ -211,6 +216,7 @@ ui <- shinyUI(
                                            placeholder = 'Type in a category
                                            to search.')
                                          ),
+                          
                           dataTableOutput('exposed'))
     )
   )
